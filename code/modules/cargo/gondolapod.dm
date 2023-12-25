@@ -8,7 +8,7 @@
 	response_disarm_simple = "bop"
 	response_harm_continuous = "kicks"
 	response_harm_simple = "kick"
-	faction = list("gondola")
+	faction = list(FACTION_GONDOLA)
 	turns_per_move = 10
 	icon = 'icons/obj/supplypods.dmi'
 	icon_state = "gondola"
@@ -65,11 +65,13 @@
 
 /mob/living/simple_animal/pet/gondola/gondolapod/setOpened()
 	opened = TRUE
+	layer = initial(layer)
 	update_appearance()
 	addtimer(CALLBACK(src, TYPE_PROC_REF(/atom/, setClosed)), 50)
 
 /mob/living/simple_animal/pet/gondola/gondolapod/setClosed()
 	opened = FALSE
+	layer = LOW_MOB_LAYER
 	update_appearance()
 
 /mob/living/simple_animal/pet/gondola/gondolapod/death()

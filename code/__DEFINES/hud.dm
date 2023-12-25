@@ -123,7 +123,7 @@
 
 //Drones
 #define ui_drone_drop "CENTER+1:18,SOUTH:5"
-#define ui_drone_pull "CENTER+2:2,SOUTH:5"
+#define ui_drone_pull "CENTER+1.5:2,SOUTH:5"
 #define ui_drone_storage "CENTER-2:14,SOUTH:5"
 #define ui_drone_head "CENTER-3:14,SOUTH:5"
 
@@ -135,8 +135,8 @@
 #define ui_borg_lamp "CENTER-3:16, SOUTH:5"
 #define ui_borg_tablet "CENTER-4:16, SOUTH:5"
 #define ui_inv1 "CENTER-2:16,SOUTH:5"
-#define ui_inv2 "CENTER-1  :16,SOUTH:5"
-#define ui_inv3 "CENTER  :16,SOUTH:5"
+#define ui_inv2 "CENTER-1 :16,SOUTH:5"
+#define ui_inv3 "CENTER :16,SOUTH:5"
 #define ui_borg_module "CENTER+1:16,SOUTH:5"
 #define ui_borg_store "CENTER+2:16,SOUTH:5"
 #define ui_borg_camera "CENTER+3:21,SOUTH:5"

@@ -16,7 +16,7 @@ path/corner/color_name {\
 /obj/structure/chair/sofa
 	name = "old ratty sofa"
 	icon_state = "error"
-	icon = 'icons/obj/sofa.dmi'
+	icon = 'icons/obj/chairs_wide.dmi'
 	buildstackamount = 1
 	item_chair = null
 	var/mutable_appearance/armrest
@@ -36,7 +36,6 @@ path/corner/color_name {\
 
 /obj/structure/chair/sofa/proc/gen_armrest()
 	armrest = mutable_appearance(initial(icon), "[icon_state]_armrest", ABOVE_MOB_LAYER)
-	SET_PLANE_EXPLICIT(armrest, GAME_PLANE_UPPER, src)
 	update_armrest()
 
 /obj/structure/chair/sofa/electrify_self(obj/item/assembly/shock_kit/input_shock_kit, mob/user, list/overlays_from_child_procs)
@@ -105,17 +104,19 @@ COLORED_SOFA(/obj/structure/chair/sofa, maroon, SOFA_MAROON)
 /obj/structure/chair/sofa/bench/left
 	icon_state = "bench_left"
 	greyscale_config = /datum/greyscale_config/bench_left
-	greyscale_colors = "#af7d28"
 
 /obj/structure/chair/sofa/bench/right
 	icon_state = "bench_right"
 	greyscale_config = /datum/greyscale_config/bench_right
-	greyscale_colors = "#af7d28"
 
 /obj/structure/chair/sofa/bench/corner
 	icon_state = "bench_corner"
 	greyscale_config = /datum/greyscale_config/bench_corner
-	greyscale_colors = "#af7d28"
+
+/obj/structure/chair/sofa/bench/solo
+	icon_state = "bench_solo"
+	greyscale_config = /datum/greyscale_config/bench_solo
+
 
 // Bamboo benches
 /obj/structure/chair/sofa/bamboo

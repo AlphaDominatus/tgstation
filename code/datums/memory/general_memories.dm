@@ -725,14 +725,14 @@
 	return list("[protagonist_name] [mood_verb] as they [result] the deadly game of roulette.")
 
 /// When a heretic finishes their ritual of knowledge
-/datum/memory/heretic_knowlege_ritual
+/datum/memory/heretic_knowledge_ritual
 	story_value = STORY_VALUE_AMAZING
 	// Protagonist = heretic
 
-/datum/memory/heretic_knowlege_ritual/get_names()
+/datum/memory/heretic_knowledge_ritual/get_names()
 	return list("[protagonist_name] absorbing boundless knowledge through eldritch research.")
 
-/datum/memory/heretic_knowlege_ritual/get_starts()
+/datum/memory/heretic_knowledge_ritual/get_starts()
 	return list(
 		"[protagonist_name] laying out a circle of green tar and candles",
 		"multiple books around [protagonist_name] flipping open",
@@ -742,16 +742,16 @@
 		"a wide, strange looking circle, with [protagonist_name] sketching it"
 	)
 
-/datum/memory/heretic_knowlege_ritual/get_moods()
+/datum/memory/heretic_knowledge_ritual/get_moods()
 	return list("[protagonist_name] [mood_verb] as their hand glows with power.")
 
-/datum/memory/heretic_knowlege_ritual/get_happy_moods()
+/datum/memory/heretic_knowledge_ritual/get_happy_moods()
 	return list("cackling madly")
 
-/datum/memory/heretic_knowlege_ritual/get_neutral_moods()
+/datum/memory/heretic_knowledge_ritual/get_neutral_moods()
 	return list("staring blankly with a wide grin")
 
-/datum/memory/heretic_knowlege_ritual/get_sad_moods()
+/datum/memory/heretic_knowledge_ritual/get_sad_moods()
 	return list("cackling insanely")
 
 /// Failed to defuse a bomb, by triggering it early.
@@ -817,4 +817,158 @@
 	return list(
 		"[protagonist_name] helping up [deuteragonist_name]",
 		"[deuteragonist_name] taking the hand offered graciously by [protagonist_name] to get up",
+	)
+
+/// Catching a fish
+/datum/memory/caught_fish
+	story_value = STORY_VALUE_OKAY
+
+/datum/memory/caught_fish/get_names()
+	return list(
+		"[protagonist_name] catching an absolute honker.",
+		"[protagonist_name] caught a [deuteragonist_name].",
+	)
+
+/datum/memory/caught_fish/get_starts()
+	return list(
+		"[protagonist_name] reels in the line",
+		"[protagonist_name]'s eye glints, and they begin reeling",
+		"in a fishing trance, [protagonist_name] catches something",
+		"[protagonist_name] begins battle with a fish",
+		"a whole lot of fishing going on",
+	)
+
+/datum/memory/caught_fish/get_moods()
+	return list(
+		"[protagonist_name] [mood_verb] as a [deuteragonist_name] flies out of the water!",
+		"[protagonist_name] [mood_verb] as they catch a [deuteragonist_name]!",
+		"[protagonist_name] [mood_verb] as they pose holding a [deuteragonist_name]!",
+	)
+
+/datum/memory/caught_fish/get_sad_moods()
+	return list("partakes in therapy fishing")
+
+/// Becoming a mutant via infusion
+/datum/memory/dna_infusion
+	story_value = STORY_VALUE_MEH
+	///describing what they turn into, "skittish", "nomadic", etc
+	var/mutantlike
+
+/datum/memory/dna_infusion/New(
+	datum/mind/memorizer_mind,
+	atom/protagonist,
+	atom/deuteragonist,
+	atom/antagonist,
+	mutantlike,
+)
+	src.mutantlike = mutantlike
+	return ..()
+
+/datum/memory/dna_infusion/get_names()
+	return list(
+		"[protagonist_name] infusing with a [deuteragonist_name].",
+		"[protagonist_name] infusing a [deuteragonist_name] into themselves.",
+	)
+
+/datum/memory/dna_infusion/get_starts()
+	return list(
+		"[protagonist_name] enters a creepy DNA machine",
+		"[protagonist_name]'s partakes in some mad science",
+		"the DNA infuser closes with [protagonist_name] inside",
+		"a [deuteragonist_name] is in the infusion slot"
+	)
+
+/datum/memory/dna_infusion/get_moods()
+	return list(
+		"[protagonist_name] [mood_verb] as they infuse with a [deuteragonist_name]!",
+		"[protagonist_name] [mood_verb] as they become one the [deuteragonist_name].",
+		"[protagonist_name] [mood_verb] as their DNA has [deuteragonist_name] folded into it.",
+		"[protagonist_name] becomes more [mutantlike] as they infuse with a [deuteragonist_name]!",
+		"[protagonist_name] becomes more [mutantlike] as they become one the [deuteragonist_name].",
+		"[protagonist_name] becomes more [mutantlike] as their DNA has [deuteragonist_name] folded into it.",
+	)
+
+/datum/memory/dna_infusion/get_happy_moods()
+	return list(
+		"endures the pain for science",
+		"confidently winces through the pain"
+	)
+
+/datum/memory/dna_infusion/get_neutral_moods()
+	return list(
+		"screams with pain",
+		"begins to have second thoughts"
+	)
+
+/datum/memory/dna_infusion/get_sad_moods()
+	return list("bitterly rejects their humanity")
+
+/// Who rev'd me, so if a mindreader reads a rev, they have a clue on who to hunt down
+/datum/memory/recruited_by_headrev
+
+/datum/memory/recruited_by_headrev/get_names()
+	return list("[protagonist_name] is converted into a revolutionary by [antagonist_name]")
+
+/datum/memory/recruited_by_headrev/get_starts()
+	return list(
+		"[protagonist_name]'s mind sets itself on a singular, violent purpose as they're flashed by [antagonist_name]: Kill the heads.",
+		"[antagonist_name] lifts an odd device to [protagonist_name]'s eyes and flashes him, imprinting murderous instructions.",
+	)
+
+/// Who converted into a blood brother
+/datum/memory/recruited_by_blood_brother
+
+/datum/memory/recruited_by_blood_brother/get_names()
+	return list("[protagonist_name] is converted into a blood brother by [antagonist_name]")
+
+/datum/memory/recruited_by_blood_brother/get_starts()
+	return list(
+		"[antagonist_name] acts just a bit too friendly with [protagonist_name], moments away from converting them into a blood brother.",
+		"[protagonist_name] is brought into [antagonist_name]'s life of crime and espionage.",
+	)
+
+/// Saw someone play Russian Roulette.
+/datum/memory/witnessed_gods_wrath
+	memory_flags = MEMORY_CHECK_BLINDNESS|MEMORY_SKIP_UNCONSCIOUS
+	story_value = STORY_VALUE_AMAZING
+
+/datum/memory/witnessed_gods_wrath/New(
+	datum/mind/memorizer_mind,
+	atom/protagonist,
+	atom/deuteragonist,
+	atom/antagonist,
+)
+
+/datum/memory/witnessed_gods_wrath/get_names()
+	return list("[protagonist_name] suffering the wrath of [antagonist_name].")
+
+/datum/memory/witnessed_gods_wrath/get_starts()
+	return list(
+		"[protagonist_name] burns [deuteragonist_name], and [antagonist_name] turns [protagonist_name] into a fine red mist.",
+		"[antagonist_name] explodes [protagonist_name] into a million pieces for defiling [deuteragonist_name].",
+		"[protagonist_name] angers [antagonist_name] by defiling [deuteragonist_name], and gets obliterated.",
+	)
+
+/datum/memory/witnessed_gods_wrath/get_moods()
+	return list("[protagonist_name] [mood_verb] as they get annihilated by [antagonist_name].")
+
+/datum/memory/witnessed_gods_wrath/get_happy_moods()
+	return list(
+		"cackles hysterically",
+		"laughs maniacally",
+		"grins widely",
+	)
+
+/datum/memory/witnessed_gods_wrath/get_neutral_moods()
+	return list(
+		"appears concerned",
+		"reconsiders their life decisions",
+		"has a blank expression",
+	)
+
+/datum/memory/witnessed_gods_wrath/get_sad_moods()
+	return list(
+		"appears dejected",
+		"is filled with regret",
+		"winces in despair"
 	)
