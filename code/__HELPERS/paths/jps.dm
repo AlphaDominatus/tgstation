@@ -34,11 +34,11 @@
 		previous_node = incoming_previous_node
 		number_tiles = previous_node.number_tiles + jumps
 		node_goal = previous_node.node_goal
-		heuristic = get_dist(tile, node_goal)
+		heuristic = get_dist_euclidean(tile, node_goal)
 		f_value = number_tiles + heuristic
 	// otherwise, no parent node means this is from a subscan lateral scan, so we just need the tile for now until we call [datum/jps/proc/update_parent] on it
 
-/datum/jps_node/Destroy(force, ...)
+/datum/jps_node/Destroy(force)
 	previous_node = null
 	return ..()
 
@@ -47,7 +47,7 @@
 	node_goal = previous_node.node_goal
 	jumps = get_dist(tile, previous_node.tile)
 	number_tiles = previous_node.number_tiles + jumps
-	heuristic = get_dist(tile, node_goal)
+	heuristic = get_dist_euclidean(tile, node_goal)
 	f_value = number_tiles + heuristic
 
 /proc/HeapPathWeightCompare(datum/jps_node/a, datum/jps_node/b)
@@ -194,7 +194,7 @@
 		if(!CAN_STEP(lag_turf, current_turf, simulated_only, pass_info, avoid))
 			return
 
-		if(current_turf == end || (mintargetdist && (get_dist(current_turf, end) <= mintargetdist)))
+		if(current_turf == end || (mintargetdist && (get_dist(current_turf, end) <= mintargetdist) && !diagonally_blocked(current_turf, end)))
 			var/datum/jps_node/final_node = new(current_turf, parent_node, steps_taken)
 			found_turfs[current_turf] = TRUE
 			if(parent_node) // if this is a direct lateral scan we can wrap up, if it's a subscan from a diag, we need to let the diag make their node first, then finish
@@ -256,7 +256,7 @@
 		if(!CAN_STEP(lag_turf, current_turf, simulated_only, pass_info, avoid))
 			return
 
-		if(current_turf == end || (mintargetdist && (get_dist(current_turf, end) <= mintargetdist)))
+		if(current_turf == end || (mintargetdist && (get_dist(current_turf, end) <= mintargetdist) && !diagonally_blocked(current_turf, end)))
 			var/datum/jps_node/final_node = new(current_turf, parent_node, steps_taken)
 			found_turfs[current_turf] = TRUE
 			unwind_path(final_node)

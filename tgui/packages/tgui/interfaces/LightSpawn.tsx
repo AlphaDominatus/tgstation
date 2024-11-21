@@ -1,6 +1,16 @@
+import { useState } from 'react';
+import {
+  Box,
+  Button,
+  Knob,
+  Section,
+  Slider,
+  Stack,
+  Tabs,
+} from 'tgui-core/components';
+
 import { classes } from '../../common/react';
 import { useBackend, useLocalState } from '../backend';
-import { Box, Button, Knob, Section, Slider, Stack, Tabs } from '../components';
 import { Window } from '../layouts';
 
 enum Direction {
@@ -40,14 +50,8 @@ type Data = {
 export const LightSpawn = (props) => {
   const { act, data } = useBackend<Data>();
   const { templates = [], default_id, default_category, category_ids } = data;
-  const [currentTemplate, setCurrentTemplate] = useLocalState<string>(
-    'currentTemplate',
-    default_id,
-  );
-  const [currentCategory, setCurrentCategory] = useLocalState<string>(
-    'currentCategory',
-    default_category,
-  );
+  const [currentTemplate, setCurrentTemplate] = useState(default_id);
+  const [currentCategory, setCurrentCategory] = useState(default_category);
 
   const category_keys = category_ids ? Object.keys(category_ids) : [];
 

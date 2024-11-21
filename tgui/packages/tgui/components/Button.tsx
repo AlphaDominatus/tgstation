@@ -5,9 +5,17 @@
  */
 
 import { Placement } from '@popperjs/core';
-import { KEY } from 'common/keys';
+import { isEscape, KEY } from 'common/keys';
 import { BooleanLike, classes } from 'common/react';
-import { createRef, MouseEvent, ReactNode, useEffect, useState } from 'react';
+import {
+  ChangeEvent,
+  createRef,
+  MouseEvent,
+  ReactNode,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
 
 import { Box, BoxProps, computeBoxClassName, computeBoxProps } from './Box';
 import { Icon } from './Icon';
@@ -123,7 +131,7 @@ export const Button = (props: Props) => {
         }
 
         // Refocus layout on pressing escape.
-        if (event.key === KEY.Escape) {
+        if (isEscape(event.key)) {
           event.preventDefault();
         }
       }}
@@ -307,10 +315,15 @@ const ButtonInput = (props: InputProps) => {
       className={classes([
         'Button',
         fluid && 'Button--fluid',
+        disabled && 'Button--disabled',
         'Button--color--' + color,
       ])}
       {...rest}
-      onClick={() => setInInput(true)}
+      onClick={() => {
+        if (!disabled) {
+          setInInput(true);
+        }
+      }}
     >
       {icon && <Icon name={icon} rotation={iconRotation} spin={iconSpin} />}
       <div>{toDisplay}</div>
@@ -335,7 +348,7 @@ const ButtonInput = (props: InputProps) => {
             commitResult(event);
             return;
           }
-          if (event.key === KEY.Escape) {
+          if (isEscape(event.key)) {
             setInInput(false);
           }
         }}
@@ -355,3 +368,40 @@ const ButtonInput = (props: InputProps) => {
 };
 
 Button.Input = ButtonInput;
+
+type FileProps = {
+  accept: string;
+  multiple?: boolean;
+  onSelectFiles: (files: FileList) => void;
+} & Props;
+
+/**  Accepts file input */
+function ButtonFile(props: FileProps) {
+  const { accept, multiple, onSelectFiles, ...rest } = props;
+
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  async function handleChange(event: ChangeEvent<HTMLInputElement>) {
+    const files = event.target.files;
+    if (files?.length) {
+      onSelectFiles(files);
+      event.target.value = '';
+    }
+  }
+
+  return (
+    <>
+      <Button onClick={() => inputRef.current?.click()} {...rest} />
+      <input
+        hidden
+        type="file"
+        ref={inputRef}
+        accept={accept}
+        multiple={multiple}
+        onChange={handleChange}
+      />
+    </>
+  );
+}
+
+Button.File = ButtonFile;

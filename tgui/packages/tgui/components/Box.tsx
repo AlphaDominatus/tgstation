@@ -7,6 +7,7 @@
 import { BooleanLike, classes } from 'common/react';
 import {
   createElement,
+  DragEventHandler,
   KeyboardEventHandler,
   MouseEventHandler,
   ReactNode,
@@ -32,6 +33,7 @@ export type EventHandlers = Partial<{
   onMouseOver: MouseEventHandler<HTMLDivElement>;
   onMouseUp: MouseEventHandler<HTMLDivElement>;
   onScroll: UIEventHandler<HTMLDivElement>;
+  onDrop: DragEventHandler<HTMLDivElement>;
 }>;
 
 export type BoxProps = Partial<{
@@ -82,7 +84,7 @@ export const halfUnit = (value: unknown) => {
 const isColorCode = (str: unknown) => !isColorClass(str);
 
 const isColorClass = (str: unknown): boolean => {
-  return typeof str === 'string' && CSS_COLORS.includes(str);
+  return typeof str === 'string' && CSS_COLORS.includes(str as any);
 };
 
 const mapRawPropTo = (attrName) => (style, value) => {
@@ -121,7 +123,6 @@ const mapColorPropTo = (attrName) => (style, value) => {
 const stringStyleMap = {
   align: mapRawPropTo('textAlign'),
   bottom: mapUnitPropTo('bottom', unit),
-  colSpan: mapRawPropTo('colSpan'),
   fontFamily: mapRawPropTo('fontFamily'),
   fontSize: mapUnitPropTo('fontSize', unit),
   fontWeight: mapRawPropTo('fontWeight'),

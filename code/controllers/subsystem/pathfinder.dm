@@ -82,7 +82,7 @@ SUBSYSTEM_DEF(pathfinder)
 
 	// Otherwise we're gonna make a new one, and turn it into a path for the callbacks passed into us
 	var/list/datum/callback/pass_in = list()
-	pass_in += CALLBACK(GLOBAL_PROC, /proc/path_map_passalong, on_finish, get_turf(caller), mintargetdist, skip_first)
+	pass_in += CALLBACK(GLOBAL_PROC, GLOBAL_PROC_REF(path_map_passalong), on_finish, get_turf(caller), mintargetdist, skip_first)
 	// And to allow subsequent calls to reuse the same map, we'll put a placeholder in the cache, and fill it up when the pathing finishes
 	var/datum/path_map/empty = new()
 	empty.pass_info = new(caller, access)
@@ -158,7 +158,7 @@ SUBSYSTEM_DEF(pathfinder)
 
 /// Takes a set of pathfind info, returns the first valid pathmap that would work if one exists
 /// Optionally takes a max age to accept (defaults to 0 seconds) and a minimum acceptable range
-/// If include_building is true and we can only find a building path, ew'll use that instead. tho we will wait for it to finish first
+/// If include_building is true and we can only find a building path, we'll use that instead. tho we will wait for it to finish first
 /datum/controller/subsystem/pathfinder/proc/get_valid_map(datum/can_pass_info/pass_info, turf/target, simulated_only = TRUE, turf/exclude, age = MAP_REUSE_INSTANT, min_range = -INFINITY, include_building = FALSE)
 	// Walk all the maps that match our caller's turf OR our target's
 	// Then hold onto em. If their cache time is short we can reuse/expand them, if not we'll have to make a new one

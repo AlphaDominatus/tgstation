@@ -45,14 +45,14 @@
 		coffeepot = new /obj/item/reagent_containers/cup/coffeepot(src)
 		cartridge = new /obj/item/coffee_cartridge(src)
 
-/obj/machinery/coffeemaker/deconstruct()
+/obj/machinery/coffeemaker/on_deconstruction(disassembled)
 	coffeepot?.forceMove(drop_location())
 	cartridge?.forceMove(drop_location())
-	return ..()
 
 /obj/machinery/coffeemaker/Destroy()
 	QDEL_NULL(coffeepot)
 	QDEL_NULL(cartridge)
+	remove_shared_particles(/particles/smoke)
 	return ..()
 
 /obj/machinery/coffeemaker/Exited(atom/movable/gone, direction)
@@ -322,7 +322,7 @@
 	if(length(options) == 1)
 		choice = options[1]
 	else
-		choice = show_radial_menu(user, src, options, require_near = !issilicon(user))
+		choice = show_radial_menu(user, src, options, require_near = !HAS_SILICON_ACCESS(user))
 
 	// post choice verification
 	if(brewing || (isAI(user) && machine_stat & NOPOWER) || !user.can_perform_action(src, ALLOW_SILICON_REACH))
@@ -392,17 +392,15 @@
 
 ///Updates the smoke state to something else, setting particles if relevant
 /obj/machinery/coffeemaker/proc/toggle_steam()
-	QDEL_NULL(particles)
-	if(brewing)
-		particles = new /particles/smoke/steam/mild()
-		particles.position = list(-6, 0, 0)
+	var/obj/effect/abstract/shared_particle_holder/smoke_particles = add_shared_particles(/particles/smoke/steam/mild, "smoke_coffeemaker")
+	smoke_particles.particles.position = list(-6, 0, 0)
 
 /obj/machinery/coffeemaker/proc/operate_for(time, silent = FALSE)
 	brewing = TRUE
 	if(!silent)
 		playsound(src, 'sound/machines/coffeemaker_brew.ogg', 20, vary = TRUE)
 	toggle_steam()
-	use_power(active_power_usage * time * 0.1) // .1 needed here to convert time (in deciseconds) to seconds such that watts * seconds = joules
+	use_energy(active_power_usage * time / (1 SECONDS)) // .1 needed here to convert time (in deciseconds) to seconds such that watts * seconds = joules
 	addtimer(CALLBACK(src, PROC_REF(stop_operating)), time / speed)
 
 /obj/machinery/coffeemaker/proc/stop_operating()
@@ -489,7 +487,7 @@
 /obj/item/storage/fancy/coffee_cart_rack/Initialize(mapload)
 	. = ..()
 	atom_storage.max_slots = 4
-	atom_storage.set_holdable(list(/obj/item/coffee_cartridge))
+	atom_storage.set_holdable(/obj/item/coffee_cartridge)
 
 /*
  * impressa coffee maker
@@ -706,19 +704,40 @@
 	update_appearance(UPDATE_OVERLAYS)
 
 /obj/machinery/coffeemaker/impressa/toggle_steam()
-	QDEL_NULL(particles)
-	if(brewing)
-		particles = new /particles/smoke/steam/mild()
-		particles.position = list(-2, 1, 0)
+	var/obj/effect/abstract/shared_particle_holder/smoke_particles = add_shared_particles(/particles/smoke/steam/mild, "smoke_impressa")
+	smoke_particles.particles.position = list(-2, 1, 0)
 
 /obj/machinery/coffeemaker/impressa/brew()
 	power_change()
 	if(!try_brew())
 		return
 	operate_for(brew_time)
-	coffeepot.reagents.add_reagent_list(list(/datum/reagent/consumable/coffee = 120))
-	coffee.Cut(1,2) //remove the first item from the list
+
+	// create a reference bean reagent list
+	var/list/reference_bean_reagents = list()
+	var/obj/item/food/grown/coffee/reference_bean = new /obj/item/food/grown/coffee(src)
+	for(var/datum/reagent/ref_bean_reagent as anything in reference_bean.reagents.reagent_list)
+		reference_bean_reagents += ref_bean_reagent.name
+
+	// add all the reagents from the coffee beans to the coffeepot (ommit the ones from the reference bean)
+	var/list/reagent_delta = list()
+	var/obj/item/food/grown/coffee/bean = coffee[coffee_amount]
+	for(var/datum/reagent/substance as anything in bean.reagents.reagent_list)
+		if(!(reference_bean_reagents.Find(substance.name)))	// we only add the reagent if it's a non-standard for coffee beans
+			reagent_delta += list(substance.type = substance.volume)
+	coffeepot.reagents.add_reagent_list(reagent_delta)
+
+	qdel(reference_bean)
+
+	// remove the coffee beans from the machine
+	coffee.Cut(1,2)
 	coffee_amount--
+
+	// fill the rest of the pot with coffee
+	if(coffeepot.reagents.total_volume < 120)
+		var/extra_coffee_amount = 120 - coffeepot.reagents.total_volume
+		coffeepot.reagents.add_reagent(/datum/reagent/consumable/coffee, extra_coffee_amount)
+
 	update_appearance(UPDATE_OVERLAYS)
 
 #undef BEAN_CAPACITY

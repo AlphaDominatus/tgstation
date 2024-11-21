@@ -1,6 +1,4 @@
 import { useState } from 'react';
-
-import { useBackend } from '../backend';
 import {
   Button,
   Collapsible,
@@ -8,7 +6,9 @@ import {
   NoticeBox,
   Section,
   Stack,
-} from '../components';
+} from 'tgui-core/components';
+
+import { useBackend } from '../backend';
 import { Window } from '../layouts';
 
 type LogViewerData = {
@@ -227,11 +227,7 @@ const CategoryViewer = (props: CategoryViewerProps) => {
 
             return (
               <Stack.Item key={entry.id}>
-                <Collapsible
-                  fitted
-                  tooltip={entry.timestamp}
-                  title={`[${entry.id}] - ${entry.message}`}
-                >
+                <Collapsible title={`[${entry.id}] - ${entry.message}`}>
                   <Stack vertical fill>
                     <Stack.Item>
                       <p font-family="Courier">{entry.message}</p>
